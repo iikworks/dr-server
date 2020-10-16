@@ -2,6 +2,11 @@ from marshmallow import Schema, fields, validate, validates_schema
 from .validations import name_regex, register_other_validations
 
 
+class AuthSuccessSchema(Schema):
+    user_id = fields.Int()
+    token = fields.String()
+    token_expires_in = fields.Int()
+
 class UserSchema(Schema):
     id = fields.Int()
     email = fields.Email()
