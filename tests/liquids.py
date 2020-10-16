@@ -113,3 +113,6 @@ class LiquidsTestCase(TestCase):
 
         response = self.app.get(f'/liquids/{liquid.id}')
         self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode('UTF-8'))
+        self.assertEqual(liquid.title, data['title'])
