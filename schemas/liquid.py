@@ -16,7 +16,7 @@ class LiquidsQueryArgsSchema(Schema):
     order_column = fields.String(missing='id')
     order_type = fields.String(missing='asc')
 
-    @post_load()
+    @post_load
     def final_validates(self, data, **kwargs):
         return {
             'filters': {},

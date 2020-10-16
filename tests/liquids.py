@@ -8,7 +8,7 @@ from models.liquid import Liquid
 class LiquidsTestCase(TestCase):
     def test_liquids_list_page(self):
         user = User(**{
-            'email': 'logout@mail.ru',
+            'email': 'liquidslist@mail.ru',
             'first_name': 'Test',
             'last_name': 'User',
             'password': '111111',
@@ -17,7 +17,8 @@ class LiquidsTestCase(TestCase):
 
         liquid = Liquid(
             user_id=user.id,
-            title='Дизельное топливо'
+            title='Дизельное топливо',
+            balance=888.50
         )
         liquid.save()
 
@@ -90,3 +91,25 @@ class LiquidsTestCase(TestCase):
                 self.assertEqual(liquid_title, data['title'])
                 self.assertEqual(liquid_balance, data['balance'])
                 self.assertEqual(liquid_unit, data['unit'])
+
+    def test_liquid_detail_page(self):
+        user = User(**{
+            'email': 'liquiddetail@mail.ru',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password': '111111',
+        })
+        user.save()
+
+        liquid = Liquid(
+            user_id=user.id,
+            title='Дизельное топливо',
+            balance=888.50
+        )
+        liquid.save()
+
+        response = self.app.get(f'/liquids/0')
+        self.assertEqual(response.status_code, 404)
+
+        response = self.app.get(f'/liquids/{liquid.id}')
+        self.assertEqual(response.status_code, 200)

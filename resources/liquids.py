@@ -1,4 +1,4 @@
-from flask import jsonify, g
+from flask import abort, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy import desc, asc
@@ -34,3 +34,12 @@ class Liquids(MethodView):
         liquid.save()
 
         return liquid
+
+
+@liquids.route('/<liquid_id>')
+class LiquidsById(MethodView):
+    @liquids.response(LiquidSchema(only=(
+            'prefix', 'title', 'balance', 'unit', 'user'
+    )), code=200)
+    def get(self, liquid_id):
+        return Liquid.query.get_or_404(liquid_id)
