@@ -17,6 +17,7 @@ Flask-Cors = "==3.0.8"
 flask-smorest = "*"
 python-dotenv = "*"
 flask-migrate = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"

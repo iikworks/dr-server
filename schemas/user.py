@@ -7,11 +7,13 @@ class AuthSuccessSchema(Schema):
     token = fields.String()
     token_expires_in = fields.Int()
 
+
 class UserSchema(Schema):
     id = fields.Int()
     email = fields.Email()
     first_name = fields.String()
     last_name = fields.String()
+    employee = fields.Integer()
     created_at = fields.DateTime()
 
 

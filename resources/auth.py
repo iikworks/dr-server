@@ -5,7 +5,7 @@ from schemas.user import LoginQueryArgsSchema, SignUpQueryArgsSchema, AuthSucces
 from models.user import User
 from models.token import Token
 from app.helpers import to_fixed
-from middlewares.auth import auth_required
+from middlewares import auth_required
 
 auth = Blueprint('auth', 'auth', url_prefix='/auth')
 
