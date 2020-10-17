@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('prefix', sa.String(length=120), nullable=True),
     sa.Column('title', sa.String(length=120), nullable=False),
-    sa.Column('balance', sa.Numeric(precision=2, asdecimal=False), nullable=True),
+    sa.Column('balance', sa.Numeric(precision=10, asdecimal=False, scale=2), nullable=True),
     sa.Column('unit', sa.String(length=50), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),

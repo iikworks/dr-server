@@ -47,6 +47,7 @@ class LiquidsCreateSchema(Schema):
         required=False,
         validate=[validate.Length(max=50, min=1)]
     )
+    used = fields.Integer(required=False)
 
 
 class LiquidsUpdateSchema(Schema):
@@ -62,3 +63,4 @@ class LiquidsUpdateSchema(Schema):
     unit = fields.String(
         validate=[validate.Length(max=50, min=1)]
     )
+    used = fields.Integer()
