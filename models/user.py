@@ -12,6 +12,7 @@ class User(db.Model):
     last_name = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     employee = db.Column(db.Integer, default=0)
+    deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
     def __str__(self):

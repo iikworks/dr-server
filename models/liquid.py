@@ -13,6 +13,7 @@ class Liquid(db.Model):
     title = db.Column(db.String(120), nullable=False)
     balance = db.Column(db.Numeric(precision=2, asdecimal=False, decimal_return_scale=None), default=0.00)
     unit = db.Column(db.String(50), default='л')
+    deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
     user = db.relationship('User')
 

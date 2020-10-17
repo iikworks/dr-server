@@ -116,3 +116,106 @@ class LiquidsTestCase(TestCase):
 
         data = json.loads(response.data.decode('UTF-8'))
         self.assertEqual(liquid.title, data['title'])
+
+    def test_liquid_edit_page(self):
+        user = User(**{
+            'email': 'liquiddetail@mail.ru',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password': '111111',
+        })
+        user.save()
+
+        token = Token(user.id)
+        token.save()
+
+        liquid = Liquid(
+            user_id=user.id,
+            title='Дизельное топливо',
+            balance=888.50
+        )
+        liquid.save()
+
+        new_liquid_prefix = 'Масло'
+        new_liquid_title = 'М10-Г2'
+        new_liquid_balance = 800.50
+
+        response = self.app.put(f'/liquids/{liquid.id}', json={
+            'prefix': new_liquid_prefix,
+            'title': new_liquid_title,
+            'balance': new_liquid_balance,
+        })
+        self.assertEqual(response.status_code, 401)
+
+        response = self.app.put(f'/liquids/{liquid.id}?access_token={token.token}', json={
+            'prefix': new_liquid_prefix,
+            'title': new_liquid_title,
+            'balance': new_liquid_balance,
+        })
+        self.assertEqual(response.status_code, 403)
+
+        user.employee = 999
+        user.save()
+
+        response = self.app.put(f'/liquids/{liquid.id}?access_token={token.token}', json={
+            'prefix': new_liquid_prefix,
+            'title': new_liquid_title,
+            'balance': '0 22',
+        })
+        self.assertEqual(response.status_code, 422)
+
+        response = self.app.put(f'/liquids/{liquid.id}?access_token={token.token}', json={
+            'prefix': new_liquid_prefix,
+            'title': new_liquid_title,
+            'balance': new_liquid_balance,
+        })
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode('UTF-8'))
+        self.assertEqual(new_liquid_prefix, data['prefix'])
+        self.assertEqual(new_liquid_title, data['title'])
+        self.assertEqual(new_liquid_balance, data['balance'])
+
+        new_liquid_prefix = 'Oil'
+
+        response = self.app.put(f'/liquids/{liquid.id}?access_token={token.token}', json={
+            'prefix': new_liquid_prefix,
+        })
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode('UTF-8'))
+        self.assertEqual(new_liquid_prefix, data['prefix'])
+
+    def test_liquid_delete_page(self):
+        user = User(**{
+            'email': 'liquiddetail@mail.ru',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password': '111111',
+        })
+        user.save()
+
+        token = Token(user.id)
+        token.save()
+
+        liquid = Liquid(
+            user_id=user.id,
+            title='Дизельное топливо',
+            balance=888.50
+        )
+        liquid.save()
+
+        response = self.app.delete(f'/liquids/{liquid.id}')
+        self.assertEqual(response.status_code, 401)
+
+        response = self.app.delete(f'/liquids/{liquid.id}?access_token={token.token}')
+        self.assertEqual(response.status_code, 403)
+
+        user.employee = 999
+        user.save()
+
+        response = self.app.delete(f'/liquids/{liquid.id}?access_token={token.token}')
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode('UTF-8'))
+        self.assertEqual('success deleting', data['message'])
