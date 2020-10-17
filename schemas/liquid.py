@@ -8,6 +8,7 @@ class LiquidSchema(Schema):
     title = fields.String()
     balance = fields.Number()
     unit = fields.String()
+    used = fields.Integer()
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
     created_at = fields.DateTime()
 

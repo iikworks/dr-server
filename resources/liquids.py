@@ -1,4 +1,4 @@
-from flask import jsonify, g
+from flask import abort, jsonify, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy import desc, asc
@@ -13,7 +13,7 @@ liquids = Blueprint('liquids', 'liquids', url_prefix='/liquids')
 class Liquids(MethodView):
     @liquids.arguments(LiquidsQueryArgsSchema, location='query')
     @liquids.response(LiquidSchema(many=True, only=(
-        'prefix', 'title', 'balance', 'unit', 'user'
+        'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
     )), code=200)
     def get(self, arguments):
         order_column = arguments["order"]["column"]
@@ -29,7 +29,7 @@ class Liquids(MethodView):
     @developer_required
     @liquids.arguments(LiquidsCreateSchema, location='json')
     @liquids.response(LiquidSchema(only=(
-        'prefix', 'title', 'balance', 'unit', 'user'
+        'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
     )), code=200)
     def post(self, data):
         liquid = Liquid(user_id=g.user.id, **data)
@@ -41,19 +41,26 @@ class Liquids(MethodView):
 @liquids.route('/<liquid_id>')
 class LiquidsById(MethodView):
     @liquids.response(LiquidSchema(only=(
-            'prefix', 'title', 'balance', 'unit', 'user'
+            'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
     )), code=200)
     def get(self, liquid_id):
-        return Liquid.query.get_or_404(liquid_id)
+        liquid = Liquid.query.get_or_404(liquid_id)
+        if liquid.deleted:
+            return abort(404)
+
+        return liquid
 
     @auth_required
     @developer_required
     @liquids.arguments(LiquidsUpdateSchema, location='json')
     @liquids.response(LiquidSchema(only=(
-            'prefix', 'title', 'balance', 'unit', 'user'
+            'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
     )), code=200)
     def put(self, data, liquid_id):
         liquid = Liquid.query.get_or_404(liquid_id)
+
+        if liquid.deleted:
+            return abort(404)
 
         for key, value in data.items():
             setattr(liquid, key, value)
@@ -65,6 +72,9 @@ class LiquidsById(MethodView):
     @developer_required
     def delete(self, liquid_id):
         liquid = Liquid.query.get_or_404(liquid_id)
+        if liquid.deleted:
+            return abort(404)
+
         liquid.deleted = True
         liquid.save()
 

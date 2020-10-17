@@ -111,6 +111,15 @@ class LiquidsTestCase(TestCase):
         response = self.app.get(f'/liquids/0')
         self.assertEqual(response.status_code, 404)
 
+        liquid.deleted = True
+        liquid.save()
+
+        response = self.app.get(f'/liquids/{liquid.id}')
+        self.assertEqual(response.status_code, 404)
+
+        liquid.deleted = False
+        liquid.save()
+
         response = self.app.get(f'/liquids/{liquid.id}')
         self.assertEqual(response.status_code, 200)
 
@@ -156,6 +165,22 @@ class LiquidsTestCase(TestCase):
 
         user.employee = 999
         user.save()
+
+        liquid.deleted = True
+        liquid.save()
+
+        response = self.app.delete(f'/liquids/0?access_token={token.token}')
+        self.assertEqual(response.status_code, 404)
+
+        response = self.app.put(f'/liquids/{liquid.id}?access_token={token.token}', json={
+            'prefix': new_liquid_prefix,
+            'title': new_liquid_title,
+            'balance': new_liquid_balance,
+        })
+        self.assertEqual(response.status_code, 404)
+
+        liquid.deleted = False
+        liquid.save()
 
         response = self.app.put(f'/liquids/{liquid.id}?access_token={token.token}', json={
             'prefix': new_liquid_prefix,
@@ -213,6 +238,18 @@ class LiquidsTestCase(TestCase):
 
         user.employee = 999
         user.save()
+
+        response = self.app.delete(f'/liquids/0?access_token={token.token}')
+        self.assertEqual(response.status_code, 404)
+
+        liquid.deleted = True
+        liquid.save()
+
+        response = self.app.delete(f'/liquids/{liquid.id}?access_token={token.token}')
+        self.assertEqual(response.status_code, 404)
+
+        liquid.deleted = False
+        liquid.save()
 
         response = self.app.delete(f'/liquids/{liquid.id}?access_token={token.token}')
         self.assertEqual(response.status_code, 200)
