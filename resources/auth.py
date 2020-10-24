@@ -1,13 +1,28 @@
 from flask import jsonify, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from schemas.user import LoginQueryArgsSchema, SignUpQueryArgsSchema, AuthSuccessSchema
 from models.user import User
 from models.token import Token
 from app.helpers import to_fixed
 from middlewares import auth_required
+from schemas.user import (
+    UserSchema,
+    LoginQueryArgsSchema,
+    SignUpQueryArgsSchema,
+    AuthSuccessSchema
+)
 
 auth = Blueprint('auth', 'auth', url_prefix='/auth')
+
+
+@auth.route('/me')
+class Me(MethodView):
+    @auth.response(UserSchema, code=200)
+    @auth_required
+    def get(self):
+        user_schema = UserSchema()
+
+        return user_schema.dump(g.user)
 
 
 @auth.route('/logout')

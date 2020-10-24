@@ -4,6 +4,26 @@ from models.token import Token
 
 
 class AuthTestCase(TestCase):
+    def test_me_page(self):
+        user = User(**{
+            'email': 'me@mail.ru',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password': '111111',
+        })
+        user.save()
+
+        token = Token(user.id)
+        token.save()
+
+        response = self.app.get('/auth/me')
+        self.assertEqual(response.status_code, 401)
+
+        response = self.app.get(f'/auth/me?access_token={token.token}')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn(f'"id":{user.id}', response.data.decode('UTF-8'))
+
     def test_logout_page(self):
         user = User(**{
             'email': 'logout@mail.ru',

@@ -14,7 +14,7 @@ class UserSchema(Schema):
     first_name = fields.String()
     last_name = fields.String()
     employee = fields.Integer()
-    created_at = fields.DateTime()
+    created_at = fields.String()
 
 
 class LoginQueryArgsSchema(Schema):

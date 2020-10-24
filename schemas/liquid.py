@@ -10,7 +10,7 @@ class LiquidSchema(Schema):
     unit = fields.String()
     used = fields.Integer()
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
-    created_at = fields.DateTime()
+    created_at = fields.String()
 
 
 class LiquidsQueryArgsSchema(Schema):
