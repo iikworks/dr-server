@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from resources import load_resources
 from models import db
@@ -21,6 +22,8 @@ def create_app(config):
 
 
 def setup_app(app):
+    CORS(app)
+
     db.init_app(app)
     migrate.init_app(app, db)
     load_resources(app)
