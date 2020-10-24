@@ -20,9 +20,11 @@ class UserSchema(Schema):
 class LoginQueryArgsSchema(Schema):
     email = fields.Email(
         required=True,
+        validate=[validate.Length(max=124, min=2)]
     )
     password = fields.Str(
         required=True,
+        validate=[validate.Length(max=124, min=1)]
     )
 
 
