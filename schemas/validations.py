@@ -10,8 +10,8 @@ def name_regex(name):
 
 def register_other_validations(data):
     if data['password'] != data['password_repeat']:
-        raise ValidationError('Password is incorrectly repeated')
+        raise ValidationError('Password is incorrectly repeated', 'password_repeat')
 
     user = User.query.filter_by(email=data['email']).first()
     if user:
-        raise ValidationError('E-Mail is not unique')
+        raise ValidationError('E-Mail is not unique', 'email')
