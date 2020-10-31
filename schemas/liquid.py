@@ -53,15 +53,19 @@ class LiquidsCreateSchema(Schema):
 
 class LiquidsUpdateSchema(Schema):
     prefix = fields.String(
+        required=False,
         validate=[validate.Length(max=120, min=1)]
     )
     title = fields.String(
+    	required=False,
         validate=[validate.Length(max=120, min=1)]
     )
     balance = fields.Decimal(
+    	required=False,
         places=2
     )
     unit = fields.String(
+    	required=False,
         validate=[validate.Length(max=50, min=1)]
     )
-    used = fields.Integer()
+    used = fields.Integer(required=False)
