@@ -21,9 +21,13 @@ class Liquids(MethodView):
 
         arguments['filters']['deleted'] = False
 
-        return Liquid.query.filter_by(**arguments['filters']).order_by(
+        query = Liquid.query.filter_by(**arguments['filters']).order_by(
             desc(order_column) if order_type == 'desc' else asc(order_column)
-        ).all()
+        )
+        query = query.limit(arguments['per_page']['limit'])
+        query = query.offset(arguments['per_page']['offset'])
+
+        return query.all()
 
     @auth_required
     @developer_required
