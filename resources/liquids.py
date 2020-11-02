@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy import desc, asc
 from middlewares import auth_required, developer_required
-from schemas.liquid import LiquidSchema, LiquidsQueryArgsSchema, LiquidsCreateSchema, LiquidsUpdateSchema
+from schemas.liquid import LiquidsListSchema, LiquidSchema, LiquidsQueryArgsSchema, LiquidsCreateSchema, LiquidsUpdateSchema
 from models.liquid import Liquid
 
 liquids = Blueprint('liquids', 'liquids', url_prefix='/liquids')
@@ -12,9 +12,7 @@ liquids = Blueprint('liquids', 'liquids', url_prefix='/liquids')
 @liquids.route('/')
 class Liquids(MethodView):
     @liquids.arguments(LiquidsQueryArgsSchema, location='query')
-    @liquids.response(LiquidSchema(many=True, only=(
-        'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
-    )), code=200)
+    @liquids.response(LiquidsListSchema, code=200)
     def get(self, arguments):
         order_column = arguments["order"]["column"]
         order_type = arguments["order"]["type"]
@@ -27,7 +25,10 @@ class Liquids(MethodView):
         query = query.limit(arguments['per_page']['limit'])
         query = query.offset(arguments['per_page']['offset'])
 
-        return query.all()
+        return {
+            'liquids': query.all(),
+            'count': query.count()
+        }
 
     @auth_required
     @developer_required

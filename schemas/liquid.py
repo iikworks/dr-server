@@ -13,6 +13,11 @@ class LiquidSchema(Schema):
     created_at = fields.String()
 
 
+class LiquidsListSchema(Schema):
+    liquids = fields.Nested(LiquidSchema(many=True, only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
+    count = fields.Integer()
+
+
 class LiquidsQueryArgsSchema(Schema):
     order_column = fields.String(missing='id')
     order_type = fields.String(missing='asc')
