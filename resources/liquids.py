@@ -16,10 +16,13 @@ class Liquids(MethodView):
     def get(self, arguments):
         order_column = arguments["order"]["column"]
         order_type = arguments["order"]["type"]
-
+        
         arguments['filters']['deleted'] = False
 
-        query = Liquid.query.filter_by(**arguments['filters']).order_by(
+        query = Liquid.query.filter_by(**arguments['filters'])
+        count = query.count()
+        
+        query = query.order_by(
             desc(order_column) if order_type == 'desc' else asc(order_column)
         )
         query = query.limit(arguments['per_page']['limit'])
@@ -27,7 +30,7 @@ class Liquids(MethodView):
 
         return {
             'liquids': query.all(),
-            'count': query.count()
+            'count': count
         }
 
     @auth_required
