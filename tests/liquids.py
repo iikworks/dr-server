@@ -26,7 +26,7 @@ class LiquidsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode('UTF-8'))
-        self.assertEqual(liquid.title, data[0]['title'])
+        self.assertEqual(liquid.title, data['liquids'][0]['title'])
 
     def test_liquids_create_page(self):
         user = User(**{
