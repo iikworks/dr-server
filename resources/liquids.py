@@ -3,7 +3,8 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy import desc, asc
 from middlewares import auth_required, developer_required
-from schemas.liquid import LiquidsListSchema, LiquidSchema, LiquidsQueryArgsSchema, LiquidsCreateSchema, LiquidsUpdateSchema
+from schemas.liquid import LiquidsListSchema, LiquidSchema, LiquidsCreateSchema, LiquidsUpdateSchema
+from schemas.filters import FiltersQueryArgsSchema
 from models.liquid import Liquid
 
 liquids = Blueprint('liquids', 'liquids', url_prefix='/liquids')
@@ -11,11 +12,11 @@ liquids = Blueprint('liquids', 'liquids', url_prefix='/liquids')
 
 @liquids.route('/')
 class Liquids(MethodView):
-    @liquids.arguments(LiquidsQueryArgsSchema, location='query')
+    @liquids.arguments(FiltersQueryArgsSchema, location='query')
     @liquids.response(LiquidsListSchema, code=200)
     def get(self, arguments):
-        order_column = arguments["order"]["column"]
-        order_type = arguments["order"]["type"]
+        order_column = arguments['order']['column']
+        order_type = arguments['order']['type']
         
         arguments['filters']['deleted'] = False
 

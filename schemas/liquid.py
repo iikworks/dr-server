@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load, EXCLUDE, validate
+from marshmallow import Schema, fields, validate
 from schemas.user import UserSchema
 
 
@@ -16,30 +16,6 @@ class LiquidSchema(Schema):
 class LiquidsListSchema(Schema):
     liquids = fields.Nested(LiquidSchema(many=True, only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
     count = fields.Integer()
-
-
-class LiquidsQueryArgsSchema(Schema):
-    order_column = fields.String(missing='id')
-    order_type = fields.String(missing='asc')
-    limit = fields.Number(missing=25)
-    offset = fields.Number(missing=0)
-
-    @post_load
-    def final_validates(self, data, **kwargs):
-        return {
-            'filters': {},
-            'order': {
-                'column': data['order_column'],
-                'type': data['order_type']
-            },
-            'per_page': {
-                'limit': data['limit'],
-                'offset': data['offset']
-            }
-        }
-
-    class Meta:
-        unknown = EXCLUDE
 
 
 class LiquidsCreateSchema(Schema):
@@ -68,15 +44,15 @@ class LiquidsUpdateSchema(Schema):
         validate=[validate.Length(max=120, min=1)]
     )
     title = fields.String(
-    	required=False,
+        required=False,
         validate=[validate.Length(max=120, min=1)]
     )
     balance = fields.Decimal(
-    	required=False,
+        required=False,
         places=2
     )
     unit = fields.String(
-    	required=False,
+        required=False,
         validate=[validate.Length(max=50, min=1)]
     )
     used = fields.Integer(required=False)
