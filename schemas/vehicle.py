@@ -5,15 +5,26 @@ from schemas.user import UserSchema
 class VehicleSchema(Schema):
     id = fields.Int()
     type = fields.String()
+    type_display = fields.Method('display_type')
     title = fields.String()
     government_number = fields.Number()
     used = fields.Integer()
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
     created_at = fields.String()
 
+    def display_type(self, obj):
+        types = {
+            'tractor': 'Трактор',
+            'car': 'Автомобиль',
+            'harvester': 'С/х техника',
+            'other': 'Другое'
+        }
+
+        return types[obj.type]
+
 
 class VehiclesListSchema(Schema):
-    vehicles = fields.Nested(VehicleSchema(many=True, only=('type', 'title', 'government_number', 'user', 'used', 'id')))
+    vehicles = fields.Nested(VehicleSchema(many=True, only=('type', 'title', 'government_number', 'user', 'used', 'id', 'type_display')))
     count = fields.Integer()
 
 
