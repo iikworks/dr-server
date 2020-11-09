@@ -41,7 +41,7 @@ class LiquidsCreateSchema(Schema):
 class LiquidsUpdateSchema(Schema):
     prefix = fields.String(
         required=False,
-        validate=[validate.Length(max=120, min=1)]
+        validate=[validate.Length(max=120)]
     )
     title = fields.String(
         required=False,

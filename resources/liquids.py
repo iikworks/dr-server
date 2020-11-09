@@ -73,6 +73,8 @@ class LiquidsById(MethodView):
 
         for key, value in data.items():
             setattr(liquid, key, value)
+        if data['prefix'] == '':
+            liquid.prefix = None
         liquid.save()
 
         return liquid

@@ -76,6 +76,8 @@ class VehiclesById(MethodView):
 
         for key, value in data.items():
             setattr(vehicle, key, value)
+        if data['government_number'] == 0:
+            vehicle.government_number = None
         vehicle.save()
 
         return vehicle
