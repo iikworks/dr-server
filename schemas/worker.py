@@ -56,7 +56,7 @@ class WorkersUpdateSchema(Schema):
     )
     patronymic = fields.String(
         required=False,
-        validate=[validate.Length(max=200, min=1)]
+        validate=[validate.Length(max=200)]
     )
     show_full_name = fields.Boolean(
         required=False,
