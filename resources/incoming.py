@@ -57,6 +57,7 @@ class IncomingList(MethodView):
         incoming_model.save()
 
         liquid.balance = liquid.balance + incoming_model.amount
+        liquid.used = liquid.used + 1
         liquid.save()
 
         return incoming_model
@@ -114,6 +115,7 @@ class IncomingById(MethodView):
                 old_liquid.save()
 
                 new_liquid.balance = new_liquid.balance + incoming_model.amount
+                new_liquid.used = new_liquid.used + 1
                 new_liquid.save()
 
                 incoming_model.liquid_id = new_liquid.id
