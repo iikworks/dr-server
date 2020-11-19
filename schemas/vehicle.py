@@ -24,7 +24,15 @@ class VehicleSchema(Schema):
 
 
 class VehiclesListSchema(Schema):
-    vehicles = fields.Nested(VehicleSchema(many=True, only=('type', 'title', 'government_number', 'user', 'used', 'id', 'type_display')))
+    vehicles = fields.Nested(VehicleSchema(many=True, only=(
+        'type',
+        'title',
+        'government_number',
+        'user',
+        'used',
+        'id',
+        'type_display'
+    )))
     count = fields.Integer()
 
 
