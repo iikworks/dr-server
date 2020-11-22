@@ -3,7 +3,7 @@ import decimal
 from flask import abort, jsonify, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, Date, cast
 from middlewares import auth_required, developer_required
 from schemas.incoming import IncomingSchema, IncomingListSchema, IncomingCreateSchema, IncomingUpdateSchema
 from schemas.filters import FiltersQueryArgsSchema
@@ -24,6 +24,23 @@ class IncomingList(MethodView):
         arguments['filters']['deleted'] = False
 
         query = Incoming.query.filter_by(**arguments['filters'])
+
+        response = {}
+
+        if 'date' in arguments['data']:
+            query = query.filter(cast(Incoming.date, Date) == arguments['data']['date'])
+
+        if 'liquid_id' in arguments['data']:
+            query = query.filter_by(liquid_id=arguments['data']['liquid_id'])
+
+            amounts = query.with_entities(Incoming.amount)
+            amount = 0
+
+            for expenseAmount in amounts:
+                amount = amount + expenseAmount.amount
+
+            response['amount'] = amount
+
         count = query.count()
 
         query = query.order_by(
@@ -32,10 +49,10 @@ class IncomingList(MethodView):
         query = query.limit(arguments['per_page']['limit'])
         query = query.offset(arguments['per_page']['offset'])
 
-        return {
-            'incoming': query.all(),
-            'count': count
-        }
+        response['incoming'] = query.all()
+        response['count'] = count
+
+        return response
 
     @auth_required
     @developer_required

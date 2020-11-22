@@ -53,6 +53,7 @@ class ExpenseListSchema(Schema):
         'created_at'
     )))
     count = fields.Integer()
+    amount = fields.Integer(required=False)
 
 
 class ExpenseCreateSchema(Schema):

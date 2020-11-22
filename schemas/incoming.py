@@ -27,6 +27,7 @@ class IncomingListSchema(Schema):
         'created_at'
     )))
     count = fields.Integer()
+    amount = fields.Integer(required=False)
 
 
 class IncomingCreateSchema(Schema):
