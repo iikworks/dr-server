@@ -28,6 +28,9 @@ class IncomingListSchema(Schema):
     )))
     count = fields.Integer()
     amount = fields.Integer(required=False)
+    liquid = fields.Nested(
+        LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')), required=False
+    )
 
 
 class IncomingCreateSchema(Schema):

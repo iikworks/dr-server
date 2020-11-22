@@ -40,6 +40,7 @@ class IncomingList(MethodView):
                 amount = amount + expenseAmount.amount
 
             response['amount'] = amount
+            response['liquid'] = Liquid.query.get(arguments['data']['liquid_id'])
 
         count = query.count()
 

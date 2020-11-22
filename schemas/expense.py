@@ -54,6 +54,9 @@ class ExpenseListSchema(Schema):
     )))
     count = fields.Integer()
     amount = fields.Integer(required=False)
+    liquid = fields.Nested(
+        LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')), required=False
+    )
 
 
 class ExpenseCreateSchema(Schema):
