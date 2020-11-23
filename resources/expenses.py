@@ -49,8 +49,9 @@ class ExpensesList(MethodView):
         query = query.order_by(
             desc(order_column) if order_type == 'desc' else asc(order_column)
         )
-        query = query.limit(arguments['per_page']['limit'])
-        query = query.offset(arguments['per_page']['offset'])
+        if arguments['per_page']['limit'] != 0:
+            query = query.limit(arguments['per_page']['limit'])
+            query = query.offset(arguments['per_page']['offset'])
 
         response['expenses'] = query.all()
         response['count'] = count
