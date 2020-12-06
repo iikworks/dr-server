@@ -10,6 +10,8 @@ class FiltersQueryArgsSchema(Schema):
     limit = fields.Number(missing=25)
     offset = fields.Number(missing=0)
     date = fields.DateTime(required=False, format='%Y-%m-%d')
+    s_date = fields.DateTime(required=False, format='%Y-%m-%d')
+    e_date = fields.DateTime(required=False, format='%Y-%m-%d')
     liquid_id = fields.Number(required=False)
     vehicle_id = fields.Number(required=False)
     worker_id = fields.Number(required=False)

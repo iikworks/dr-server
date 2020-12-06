@@ -3,7 +3,7 @@ import decimal
 from flask import abort, jsonify, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from sqlalchemy import desc, asc, Date, cast
+from sqlalchemy import desc, asc, Date, cast, and_
 from middlewares import auth_required, developer_required
 from schemas.expense import ExpenseSchema, ExpenseListSchema, ExpenseCreateSchema, ExpenseUpdateSchema
 from schemas.filters import FiltersQueryArgsSchema
@@ -11,6 +11,7 @@ from models.expense import Expense
 from models.liquid import Liquid
 from models.worker import Worker
 from models.vehicle import Vehicle
+from datetime import timedelta
 
 expenses = Blueprint('expenses', 'expenses', url_prefix='/expenses')
 
@@ -31,6 +32,11 @@ class ExpensesList(MethodView):
 
         if 'date' in arguments['data']:
             query = query.filter(cast(Expense.date, Date) == arguments['data']['date'])
+
+        if 's_date' in arguments['data'] and 'e_date' in arguments['data']:
+            query = query.filter(
+                and_(Expense.date <= arguments['data']['e_date'] + timedelta(days=1), Expense.date >= arguments['data']['s_date'])
+            )
 
         if 'vehicle_id' in arguments['data']:
             query = query.filter_by(vehicle_id=arguments['data']['vehicle_id'])
