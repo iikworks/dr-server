@@ -32,6 +32,12 @@ class ExpensesList(MethodView):
         if 'date' in arguments['data']:
             query = query.filter(cast(Expense.date, Date) == arguments['data']['date'])
 
+        if 'vehicle_id' in arguments['data']:
+            query = query.filter_by(vehicle_id=arguments['data']['vehicle_id'])
+
+        if 'worker_id' in arguments['data']:
+            query = query.filter_by(worker_id=arguments['data']['worker_id'])
+
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])
 
