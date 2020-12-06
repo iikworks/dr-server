@@ -3,12 +3,13 @@ import decimal
 from flask import abort, jsonify, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from sqlalchemy import desc, asc, Date, cast
+from sqlalchemy import desc, asc, Date, cast, and_
 from middlewares import auth_required, developer_required
 from schemas.incoming import IncomingSchema, IncomingListSchema, IncomingCreateSchema, IncomingUpdateSchema
 from schemas.filters import FiltersQueryArgsSchema
 from models.incoming import Incoming
 from models.liquid import Liquid
+from datetime import timedelta
 
 incoming = Blueprint('incoming', 'incoming', url_prefix='/incoming')
 
@@ -29,6 +30,11 @@ class IncomingList(MethodView):
 
         if 'date' in arguments['data']:
             query = query.filter(cast(Incoming.date, Date) == arguments['data']['date'])
+
+        if 's_date' in arguments['data'] and 'e_date' in arguments['data']:
+            query = query.filter(
+                and_(Incoming.date <= arguments['data']['e_date'] + timedelta(days=1), Incoming.date >= arguments['data']['s_date'])
+            )
 
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])
