@@ -84,6 +84,7 @@ class ExpensesList(MethodView):
         'vehicle',
         'worker',
         'id',
+        'verified',
         'created_at'
     )), code=200)
     def post(self, data):
@@ -124,6 +125,7 @@ class ExpenseById(MethodView):
         'vehicle',
         'worker',
         'id',
+        'verified',
         'created_at'
     )), code=200)
     def get(self, expense_id):
@@ -147,6 +149,7 @@ class ExpenseById(MethodView):
         'vehicle',
         'worker',
         'id',
+        'verified',
         'created_at'
     )), code=200)
     def put(self, data, expense_id):

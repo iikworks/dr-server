@@ -73,6 +73,7 @@ class IncomingList(MethodView):
         'user',
         'liquid',
         'id',
+        'verified',
         'created_at'
     )), code=200)
     def post(self, data):
@@ -98,6 +99,7 @@ class IncomingById(MethodView):
         'user',
         'liquid',
         'id',
+        'verified',
         'created_at'
     )), code=200)
     def get(self, incoming_id):
@@ -118,6 +120,7 @@ class IncomingById(MethodView):
         'user',
         'liquid',
         'id',
+        'verified',
         'created_at'
     )), code=200)
     def put(self, data, incoming_id):

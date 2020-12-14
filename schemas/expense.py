@@ -15,6 +15,7 @@ class ExpenseSchema(Schema):
     number = fields.Integer()
     purpose = fields.String()
     date = fields.String()
+    verified = fields.Boolean()
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
     liquid = fields.Nested(LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
     vehicle = fields.Nested(VehicleSchema(only=(
@@ -50,6 +51,7 @@ class ExpenseListSchema(Schema):
         'vehicle',
         'worker',
         'id',
+        'verified',
         'created_at'
     )))
     count = fields.Integer()
@@ -117,6 +119,9 @@ class ExpenseUpdateSchema(Schema):
     purpose = fields.String(
         required=False,
         validate=[validate.Length(max=200, min=1)]
+    )
+    verified = fields.Boolean(
+        required=False,
     )
 
     date = fields.DateTime(format='%Y-%m-%dT%H:%M', required=False)

@@ -10,6 +10,7 @@ class IncomingSchema(Schema):
     number = fields.Integer()
     from_who = fields.String()
     date = fields.String()
+    verified = fields.Boolean()
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
     liquid = fields.Nested(LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
     created_at = fields.String()
@@ -24,6 +25,7 @@ class IncomingListSchema(Schema):
         'user',
         'liquid',
         'id',
+        'verified',
         'created_at'
     )))
     count = fields.Integer()
@@ -64,6 +66,9 @@ class IncomingUpdateSchema(Schema):
         validate=[validate.Length(max=200, min=1)]
     )
     date = fields.DateTime(format='%Y-%m-%dT%H:%M', required=False)
+    verified = fields.Boolean(
+        required=False,
+    )
     liquid_id = fields.Integer(required=False)
 
     @validates_schema

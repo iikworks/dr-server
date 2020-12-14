@@ -18,6 +18,7 @@ class Incoming(db.Model):
     date = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
     deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
+    verified = db.Column(db.Boolean, default=False)
     user = db.relationship('User')
     liquid = db.relationship('Liquid')
 
