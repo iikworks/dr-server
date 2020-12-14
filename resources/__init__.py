@@ -5,6 +5,7 @@ from .vehicles import vehicles
 from .workers import workers
 from .incoming import incoming
 from .expenses import expenses
+from .homestats import homestats
 
 
 def load_resources(app):
@@ -16,5 +17,6 @@ def load_resources(app):
     api.register_blueprint(workers)
     api.register_blueprint(incoming)
     api.register_blueprint(expenses)
+    api.register_blueprint(homestats)
 
     return api
