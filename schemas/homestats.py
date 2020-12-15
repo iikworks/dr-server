@@ -1,6 +1,8 @@
 from marshmallow import Schema, fields, validate, validates_schema, ValidationError
 from schemas.user import UserSchema
 from schemas.liquid import LiquidSchema
+from schemas.expense import ExpenseListSchema
+from schemas.incoming import IncomingListSchema
 from models.liquid import Liquid
 from models.homestats import HomeStats
 
@@ -12,6 +14,8 @@ class HomeStatsSchema(Schema):
     title = fields.String()
     place = fields.Integer()
     position = fields.Integer()
+    expenses = fields.Nested(ExpenseListSchema(only=('expenses', 'count', 'amount')))
+    incoming = fields.Nested(IncomingListSchema(only=('incoming', 'count', 'amount')))
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
     liquid = fields.Nested(LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
     created_at = fields.String()
@@ -28,9 +32,12 @@ class HomeStatsSchema(Schema):
 class HomeStatsListSchema(Schema):
     homestats = fields.Nested(HomeStatsSchema(many=True, only=(
         'type',
+        'type_display',
         'title',
         'place',
         'position',
+        'expenses',
+        'incoming',
         'liquid',
         'id',
         'user',
@@ -57,7 +64,7 @@ class HomeStatsCreateSchema(Schema):
         if not liquid:
             raise ValidationError('ГСМ не найдено', 'liquid_id')
 
-        homestat = HomeStats.query.filter_by(place=data['place'], position=data['position']).first()
+        homestat = HomeStats.query.filter_by(deleted=False, place=data['place'], position=data['position']).first()
         if homestat:
             raise ValidationError('Позиция занята', 'position')
 
@@ -81,8 +88,3 @@ class HomeStatsUpdateSchema(Schema):
             liquid = Liquid.query.get(data['liquid_id'])
             if not liquid:
                 raise ValidationError('ГСМ не найдено', 'liquid_id')
-
-        if 'position' in data:
-            homestat = HomeStats.query.filter_by(place=data['place'], position=data['position']).first()
-            if homestat:
-                raise ValidationError('Позиция занята', 'position')
