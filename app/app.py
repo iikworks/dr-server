@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from resources import load_resources
 from models import db
 
-migrate = Migrate()
+migrate = Migrate(compare_type=True)
 
 
 def create_app(config):
