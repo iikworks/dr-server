@@ -11,6 +11,7 @@ from models.expense import Expense
 from models.liquid import Liquid
 from models.worker import Worker
 from models.vehicle import Vehicle
+from models.using import Using
 from datetime import timedelta
 
 expenses = Blueprint('expenses', 'expenses', url_prefix='/expenses')
@@ -108,6 +109,13 @@ class ExpensesList(MethodView):
             vehicle = Vehicle.query.get(data['vehicle_id'])
             vehicle.used = vehicle.used + 1
             vehicle.save()
+
+            using = Using.query.filter_by(worker_id=worker.id, vehicle_id=vehicle.id).first()
+            if not using:
+                using = Using(worker_id=worker.id, vehicle_id=vehicle.id)
+            
+            using.used = using.used + 1
+            using.save()
 
         return expense
 

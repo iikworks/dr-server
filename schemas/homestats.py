@@ -1,10 +1,12 @@
-from marshmallow import Schema, fields, validate, validates_schema, ValidationError
+from marshmallow import Schema, fields, post_load, EXCLUDE, validate, validates_schema, ValidationError
 from schemas.user import UserSchema
 from schemas.liquid import LiquidSchema
 from schemas.expense import ExpenseListSchema
 from schemas.incoming import IncomingListSchema
 from models.liquid import Liquid
 from models.homestats import HomeStats
+from models.worker import Worker
+from models.vehicle import Vehicle
 
 
 class HomeStatsSchema(Schema):
@@ -88,3 +90,36 @@ class HomeStatsUpdateSchema(Schema):
             liquid = Liquid.query.get(data['liquid_id'])
             if not liquid:
                 raise ValidationError('ГСМ не найдено', 'liquid_id')
+
+
+class HomeStatsUsingSchema(Schema):
+    id = fields.Int()
+    worker_id = fields.Integer()
+    vehicle_id = fields.Integer()
+    used = fields.Integer()
+
+
+class HomeStatsUsingList(Schema):
+    using = fields.Nested(HomeStatsUsingSchema(many=True, only=('id', 'worker_id', 'vehicle_id', 'used')))
+
+
+class HomeStatsUsingFilters(Schema):
+    vehicle_id = fields.Number(required=False)
+    worker_id = fields.Number(required=False)
+
+    @post_load
+    def final_validates(self, data, **kwargs):
+        if 'vehicle_id' in data:
+            vehicle = Vehicle.query.get(data['vehicle_id'])
+            if not vehicle:
+                raise ValidationError('Техника не найдена', 'vehicle_id')
+
+        if 'worker_id' in data:
+            worker = Worker.query.get(data['worker_id'])
+            if not worker:
+                raise ValidationError('Работник не найден', 'worker_id')
+
+        return data
+
+    class Meta:
+        unknown = EXCLUDE

@@ -4,10 +4,18 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from middlewares import auth_required, developer_required
 from sqlalchemy import Date, cast, asc, desc
-from schemas.homestats import HomeStatsSchema, HomeStatsCreateSchema, HomeStatsUpdateSchema, HomeStatsListSchema
+from schemas.homestats import (
+    HomeStatsSchema,
+    HomeStatsCreateSchema,
+    HomeStatsUpdateSchema,
+    HomeStatsListSchema,
+    HomeStatsUsingList,
+    HomeStatsUsingFilters
+)
 from models.homestats import HomeStats
 from models.expense import Expense
 from models.incoming import Incoming
+from models.using import Using
 
 homestats = Blueprint('homestats', 'homestats', url_prefix='/homestats')
 
@@ -169,3 +177,20 @@ class HomeStatsById(MethodView):
         return jsonify({
             'message': 'success deleting'
         }), 200
+
+
+@homestats.route('/using')
+class HomeStatsUsing(MethodView):
+    @homestats.arguments(HomeStatsUsingFilters, location='query')
+    @homestats.response(HomeStatsUsingList, code=200)
+    def get(self, arguments):
+        query = Using.query
+
+        if 'worker_id' in arguments:
+            query = query.filter_by(worker_id=arguments['worker_id'])
+        if 'vehicle_id' in arguments:
+            query = query.filter_by(vehicle_id=arguments['vehicle_id'])
+
+        return {
+            'using': query.all()
+        }
