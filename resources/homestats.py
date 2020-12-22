@@ -190,6 +190,10 @@ class HomeStatsUsing(MethodView):
             query = query.filter_by(worker_id=arguments['worker_id'])
         if 'vehicle_id' in arguments:
             query = query.filter_by(vehicle_id=arguments['vehicle_id'])
+        
+        query = query.order_by(
+            desc('used')
+        )
 
         return {
             'using': query.all()
