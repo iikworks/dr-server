@@ -1,6 +1,7 @@
 import datetime
 
 from flask.views import MethodView
+from sqlalchemy import desc
 from flask_smorest import Blueprint
 from middlewares import auth_required, developer_required
 from schemas.invite import InvitesListSchema, InviteUpdateSchema, InviteSchema
@@ -16,6 +17,8 @@ class Vehicles(MethodView):
     @invites.response(InvitesListSchema, code=200)
     def get(self):
         query = Invite.query
+
+        query = query.order_by(desc('id'))
 
         return {
             'invites': query.all(),
