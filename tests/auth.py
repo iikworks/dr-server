@@ -1,6 +1,7 @@
 from tests.testcase import TestCase
 from models.user import User
 from models.token import Token
+from models.invite import Invite
 
 
 class AuthTestCase(TestCase):
@@ -88,6 +89,9 @@ class AuthTestCase(TestCase):
                 self.assertIn('token_expires_in', response.data.decode('UTF-8'))
 
     def test_sign_up_page(self):
+        invite = Invite()
+        invite.save()
+
         test_cases = {
             'wrong_email': {
                 'data': {
@@ -95,6 +99,7 @@ class AuthTestCase(TestCase):
                     'first_name': 'John',
                     'last_name': 'Device',
                     'password': '111111',
+                    'invite': invite.code,
                     'password_repeat': '111111',
                 },
                 'status_code': 422
@@ -103,6 +108,7 @@ class AuthTestCase(TestCase):
                     'email': 'signup@mail.ru',
                     'first_name': 'John223',
                     'last_name': 'Device',
+                    'invite': invite.code,
                     'password': '111111',
                     'password_repeat': '111111',
                 },
@@ -112,6 +118,7 @@ class AuthTestCase(TestCase):
                     'email': 'signup@mail.ru',
                     'first_name': 'John',
                     'last_name': 'Device gg',
+                    'invite': invite.code,
                     'password': '111111',
                     'password_repeat': '111111',
                 },
@@ -121,6 +128,7 @@ class AuthTestCase(TestCase):
                     'email': 'signup@mail.ru',
                     'first_name': 'John',
                     'last_name': 'Device',
+                    'invite': invite.code,
                     'password': '1111',
                     'password_repeat': '1111',
                 },
@@ -130,6 +138,17 @@ class AuthTestCase(TestCase):
                     'email': 'signup@mail.ru',
                     'first_name': 'John',
                     'last_name': 'Device',
+                    'invite': invite.code,
+                    'password': '111111',
+                    'password_repeat': '1111',
+                },
+                'status_code': 422
+            }, 'wrong_invite': {
+                'data': {
+                    'email': 'signup@mail.ru',
+                    'first_name': 'John',
+                    'last_name': 'Device',
+                    'invite': 'wrongwro',
                     'password': '111111',
                     'password_repeat': '1111',
                 },
@@ -139,6 +158,7 @@ class AuthTestCase(TestCase):
                     'email': 'signup@mail.ru',
                     'first_name': 'John',
                     'last_name': 'Device',
+                    'invite': invite.code,
                     'password': '111111',
                     'password_repeat': '111111',
                 },
@@ -148,6 +168,17 @@ class AuthTestCase(TestCase):
                     'email': 'signup@mail.ru',
                     'first_name': 'John',
                     'last_name': 'Device',
+                    'invite': invite.code,
+                    'password': '111111',
+                    'password_repeat': '111111',
+                },
+                'status_code': 422
+            }, 'invite_used': {
+                'data': {
+                    'email': 'signupinviteused@mail.ru',
+                    'first_name': 'John',
+                    'last_name': 'Device',
+                    'invite': invite.code,
                     'password': '111111',
                     'password_repeat': '111111',
                 },

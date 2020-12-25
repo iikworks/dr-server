@@ -41,6 +41,10 @@ class SignUpQueryArgsSchema(Schema):
         required=True,
         validate=[validate.Length(max=100, min=1), name_regex]
     )
+    invite = fields.Str(
+        required=True,
+        validate=[validate.Length(max=8, min=8)]
+    )
     password = fields.Str(
         required=True,
         validate=[validate.Length(max=124, min=6)]

@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from models.user import User
 from models.token import Token
+from models.invite import Invite
 from app.helpers import to_fixed
 from middlewares import auth_required
 from schemas.user import (
@@ -68,8 +69,15 @@ class SignUp(MethodView):
     def post(self, data):
         del data['password_repeat']
 
+        invite = data['invite']
+        del data['invite']
+
         user = User(**data)
         user.save()
+
+        invite = Invite.query.filter_by(code=invite, used=False).first()
+        invite.set_used(user.id)
+        invite.save()
 
         token = Token(user.id)
         token.save()
