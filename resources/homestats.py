@@ -155,10 +155,7 @@ class HomeStatsById(MethodView):
             return abort(404)
 
         for key, value in data.items():
-            if key == 'type':
-                setattr(homestat, 'stat_type', value)
-            else:
-                setattr(homestat, key, value)
+            setattr(homestat, key, value)
 
         homestat.save()
 
