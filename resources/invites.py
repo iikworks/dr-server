@@ -63,5 +63,6 @@ class VehiclesById(MethodView):
                 invite.used_at = datetime.datetime.now()
             else:
                 invite.used_at = None
+            invite.save()
 
         return invite
