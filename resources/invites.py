@@ -11,6 +11,8 @@ invites = Blueprint('invites', 'invites', url_prefix='/invites')
 
 @invites.route('/')
 class Vehicles(MethodView):
+    @auth_required
+    @developer_required
     @invites.response(InvitesListSchema, code=200)
     def get(self):
         query = Invite.query
@@ -33,6 +35,8 @@ class Vehicles(MethodView):
 
 @invites.route('/<invite_id>')
 class VehiclesById(MethodView):
+    @auth_required
+    @developer_required
     @invites.response(InviteSchema(only=(
             'code', 'used', 'used_at', 'user', 'created_at', 'id'
     )), code=200)
