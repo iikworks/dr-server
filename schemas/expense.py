@@ -20,9 +20,14 @@ class ExpenseSchema(Schema):
     liquid = fields.Nested(LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
     vehicle = fields.Nested(VehicleSchema(only=(
         'type',
-        'title',
+        'brand',
+        'model',
         'government_number',
+        'government_number_letters',
+        'government_number_region',
+        'year_of_ussue',
         'user',
+        'worker',
         'used',
         'id',
         'type_display'

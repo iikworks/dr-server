@@ -39,7 +39,18 @@ class Vehicles(MethodView):
     @developer_required
     @vehicles.arguments(VehiclesCreateSchema, location='json')
     @vehicles.response(VehicleSchema(only=(
-            'type', 'title', 'government_number', 'user', 'used', 'id'
+        'type',
+        'brand',
+        'model',
+        'government_number',
+        'government_number_letters',
+        'government_number_region',
+        'year_of_ussue',
+        'user',
+        'worker',
+        'used',
+        'id',
+        'type_display'
     )), code=200)
     def post(self, data):
         data['v_type'] = data['type']
@@ -54,7 +65,18 @@ class Vehicles(MethodView):
 @vehicles.route('/<vehicle_id>')
 class VehiclesById(MethodView):
     @vehicles.response(VehicleSchema(only=(
-            'type', 'title', 'government_number', 'user', 'used', 'id'
+        'type',
+        'brand',
+        'model',
+        'government_number',
+        'government_number_letters',
+        'government_number_region',
+        'year_of_ussue',
+        'user',
+        'worker',
+        'used',
+        'id',
+        'type_display'
     )), code=200)
     def get(self, vehicle_id):
         vehicle = Vehicle.query.get_or_404(vehicle_id)
@@ -67,7 +89,18 @@ class VehiclesById(MethodView):
     @developer_required
     @vehicles.arguments(VehiclesUpdateSchema, location='json')
     @vehicles.response(VehicleSchema(only=(
-            'type', 'title', 'government_number', 'user', 'used', 'id'
+        'type',
+        'brand',
+        'model',
+        'government_number',
+        'government_number_letters',
+        'government_number_region',
+        'year_of_ussue',
+        'user',
+        'worker',
+        'used',
+        'id',
+        'type_display'
     )), code=200)
     def put(self, data, vehicle_id):
         vehicle = Vehicle.query.get_or_404(vehicle_id)

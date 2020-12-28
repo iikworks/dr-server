@@ -8,10 +8,30 @@ from models.invite import Invite
 
 class InvitesTestCase(TestCase):
     def test_invites_list_page(self):
+        user = User(**{
+            'email': 'invitescreate@mail.ru',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password': '111111',
+        })
+        user.save()
+
+        token = Token(user.id)
+        token.save()
+
         invite = Invite()
         invite.save()
 
         response = self.app.get('/invites/')
+        self.assertEqual(response.status_code, 401)
+
+        response = self.app.get(f'/invites/?access_token={token.token}')
+        self.assertEqual(response.status_code, 403)
+
+        user.employee = 999
+        user.save()
+
+        response = self.app.get(f'/invites/?access_token={token.token}')
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode('UTF-8'))
@@ -42,13 +62,25 @@ class InvitesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_vehicle_detail_page(self):
+        user = User(**{
+            'email': 'invitescreate@mail.ru',
+            'first_name': 'Test',
+            'last_name': 'User',
+            'password': '111111',
+            'employee': 999
+        })
+        user.save()
+
+        token = Token(user.id)
+        token.save()
+
         invite = Invite()
         invite.save()
 
-        response = self.app.get(f'/invites/0')
+        response = self.app.get(f'/invites/0?access_token={token.token}')
         self.assertEqual(response.status_code, 404)
 
-        response = self.app.get(f'/invites/{invite.id}')
+        response = self.app.get(f'/invites/{invite.id}?access_token={token.token}')
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode('UTF-8'))

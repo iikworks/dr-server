@@ -18,7 +18,8 @@ class VehiclesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            brand='МАЗ',
+            model='555102',
             government_number=11
         )
         vehicle.save()
@@ -27,7 +28,7 @@ class VehiclesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode('UTF-8'))
-        self.assertEqual(vehicle.title, data['vehicles'][0]['title'])
+        self.assertEqual(vehicle.model, data['vehicles'][0]['model'])
 
     def test_vehicles_create_page(self):
         user = User(**{
@@ -51,34 +52,34 @@ class VehiclesTestCase(TestCase):
         user.save()
 
         vehicle_type = 'harvester'
-        vehicle_title = 'КЗС-1218'
+        vehicle_model = 'КЗС-1218'
         vehicle_government_number = 339
 
         test_cases = {
             'missing_title': {
                 'data': {
-                    'title': vehicle_title,
+                    'model': vehicle_model,
                     'government_number': vehicle_government_number,
                 },
                 'status_code': 422
             }, 'wrong_type': {
                 'data': {
                     'type': 'wrong',
-                    'title': vehicle_title,
+                    'model': vehicle_model,
                     'government_number': vehicle_government_number,
                 },
                 'status_code': 422
             }, 'wrong_government_number': {
                 'data': {
                     'type': vehicle_type,
-                    'title': vehicle_title,
+                    'model': vehicle_model,
                     'government_number': 99999,
                 },
                 'status_code': 422
             }, 'success': {
                 'data': {
                     'type': vehicle_type,
-                    'title': vehicle_title,
+                    'model': vehicle_model,
                     'government_number': vehicle_government_number,
                 },
                 'status_code': 200
@@ -92,7 +93,7 @@ class VehiclesTestCase(TestCase):
             if name == 'success':
                 data = json.loads(response.data.decode('UTF-8'))
                 self.assertEqual(vehicle_type, data['type'])
-                self.assertEqual(vehicle_title, data['title'])
+                self.assertEqual(vehicle_model, data['model'])
                 self.assertEqual(vehicle_government_number, data['government_number'])
 
     def test_vehicle_detail_page(self):
@@ -107,7 +108,8 @@ class VehiclesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            brand='МАЗ',
+            model='555102',
             government_number=11
         )
         vehicle.save()
@@ -128,7 +130,7 @@ class VehiclesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode('UTF-8'))
-        self.assertEqual(vehicle.title, data['title'])
+        self.assertEqual(vehicle.model, data['model'])
 
     def test_vehicle_edit_page(self):
         user = User(**{
@@ -145,25 +147,29 @@ class VehiclesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            brand='МАЗ',
+            model='555102',
             government_number=11
         )
         vehicle.save()
 
         new_vehicle_type = 'tractor'
-        new_vehicle_title = 'МТЗ-3022'
+        new_vehicle_brand = 'МТЗ'
+        new_vehicle_model = '3022'
         new_vehicle_government_number = 8197
 
         response = self.app.put(f'/vehicles/{vehicle.id}', json={
             'type': new_vehicle_type,
-            'title': new_vehicle_title,
+            'brand': new_vehicle_brand,
+            'model': new_vehicle_model,
             'government_number': new_vehicle_government_number,
         })
         self.assertEqual(response.status_code, 401)
 
         response = self.app.put(f'/vehicles/{vehicle.id}?access_token={token.token}', json={
             'type': new_vehicle_type,
-            'title': new_vehicle_title,
+            'brand': new_vehicle_brand,
+            'model': new_vehicle_model,
             'government_number': new_vehicle_government_number,
         })
         self.assertEqual(response.status_code, 403)
@@ -179,7 +185,8 @@ class VehiclesTestCase(TestCase):
 
         response = self.app.put(f'/vehicles/{vehicle.id}?access_token={token.token}', json={
             'type': new_vehicle_type,
-            'title': new_vehicle_title,
+            'brand': new_vehicle_brand,
+            'model': new_vehicle_model,
             'government_number': new_vehicle_government_number,
         })
         self.assertEqual(response.status_code, 404)
@@ -189,28 +196,32 @@ class VehiclesTestCase(TestCase):
 
         response = self.app.put(f'/vehicles/{vehicle.id}?access_token={token.token}', json={
             'type': 'wrong_type',
-            'title': new_vehicle_title,
+            'brand': new_vehicle_brand,
+            'model': new_vehicle_model,
             'government_number': new_vehicle_government_number,
         })
         self.assertEqual(response.status_code, 422)
 
         response = self.app.put(f'/vehicles/{vehicle.id}?access_token={token.token}', json={
             'type': new_vehicle_type,
-            'title': new_vehicle_title,
+            'brand': new_vehicle_brand,
+            'model': new_vehicle_model,
             'government_number': 99999,
         })
         self.assertEqual(response.status_code, 422)
 
         response = self.app.put(f'/vehicles/{vehicle.id}?access_token={token.token}', json={
             'type': new_vehicle_type,
-            'title': new_vehicle_title,
+            'brand': new_vehicle_brand,
+            'model': new_vehicle_model,
             'government_number': new_vehicle_government_number,
         })
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode('UTF-8'))
         self.assertEqual(new_vehicle_type, data['type'])
-        self.assertEqual(new_vehicle_title, data['title'])
+        self.assertEqual(new_vehicle_brand, data['brand'])
+        self.assertEqual(new_vehicle_model, data['model'])
         self.assertEqual(new_vehicle_government_number, data['government_number'])
 
     def test_vehicle_delete_page(self):
@@ -228,7 +239,8 @@ class VehiclesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            brand='МАЗ',
+            model='555102',
             government_number=11
         )
         vehicle.save()
