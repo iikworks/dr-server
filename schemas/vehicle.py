@@ -29,10 +29,10 @@ class VehicleSchema(Schema):
 
     def display_type(self, obj):
         types = {
-            'tractor': 'Тр',
-            'car': 'Авт',
-            'harvester': 'Сх',
-            'other': 'Др'
+            'tractor': 'Трактор',
+            'car': 'Автомобиль',
+            'harvester': 'С/х техника',
+            'other': 'Другое'
         }
 
         return types[obj.type]
