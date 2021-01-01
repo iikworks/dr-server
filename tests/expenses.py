@@ -28,7 +28,7 @@ class ExpensesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            model='МАЗ-555102',
             government_number=11
         )
         vehicle.save()
@@ -93,7 +93,7 @@ class ExpensesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            model='МАЗ-555102',
             government_number=11
         )
         vehicle.save()
@@ -225,7 +225,7 @@ class ExpensesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            model='МАЗ-555102',
             government_number=11
         )
         vehicle.save()
@@ -308,7 +308,7 @@ class ExpensesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            model='МАЗ-555102',
             government_number=11
         )
         vehicle.save()
@@ -324,7 +324,7 @@ class ExpensesTestCase(TestCase):
         new_vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            model='МАЗ-555102',
             government_number=929
         )
         new_vehicle.save()
@@ -455,7 +455,7 @@ class ExpensesTestCase(TestCase):
         vehicle = Vehicle(
             user_id=user.id,
             v_type='car',
-            title='МАЗ-555102',
+            model='МАЗ-555102',
             government_number=11
         )
         vehicle.save()
