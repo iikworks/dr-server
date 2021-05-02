@@ -17,7 +17,7 @@ incoming = Blueprint('incoming', 'incoming', url_prefix='/incoming')
 @incoming.route('/')
 class IncomingList(MethodView):
     @incoming.arguments(FiltersQueryArgsSchema, location='query')
-    @incoming.response(IncomingListSchema, code=200)
+    @incoming.response(200, IncomingListSchema)
     def get(self, arguments):
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
@@ -65,7 +65,7 @@ class IncomingList(MethodView):
     @auth_required
     @developer_required
     @incoming.arguments(IncomingCreateSchema, location='json')
-    @incoming.response(IncomingSchema(only=(
+    @incoming.response(200, IncomingSchema(only=(
         'amount',
         'number',
         'from_who',
@@ -75,7 +75,7 @@ class IncomingList(MethodView):
         'id',
         'verified',
         'created_at'
-    )), code=200)
+    )))
     def post(self, data):
         liquid = Liquid.query.get(data['liquid_id'])
 
@@ -91,7 +91,7 @@ class IncomingList(MethodView):
 
 @incoming.route('/<incoming_id>')
 class IncomingById(MethodView):
-    @incoming.response(IncomingSchema(only=(
+    @incoming.response(200, IncomingSchema(only=(
         'amount',
         'number',
         'from_who',
@@ -101,7 +101,7 @@ class IncomingById(MethodView):
         'id',
         'verified',
         'created_at'
-    )), code=200)
+    )))
     def get(self, incoming_id):
         incoming_model = Incoming.query.get_or_404(incoming_id)
         if incoming_model.deleted:
@@ -112,7 +112,7 @@ class IncomingById(MethodView):
     @auth_required
     @developer_required
     @incoming.arguments(IncomingUpdateSchema, location='json')
-    @incoming.response(IncomingSchema(only=(
+    @incoming.response(200, IncomingSchema(only=(
         'amount',
         'number',
         'from_who',
@@ -122,7 +122,7 @@ class IncomingById(MethodView):
         'id',
         'verified',
         'created_at'
-    )), code=200)
+    )))
     def put(self, data, incoming_id):
         incoming_model = Incoming.query.get_or_404(incoming_id)
 

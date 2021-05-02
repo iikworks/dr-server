@@ -20,7 +20,7 @@ expenses = Blueprint('expenses', 'expenses', url_prefix='/expenses')
 @expenses.route('/')
 class ExpensesList(MethodView):
     @expenses.arguments(FiltersQueryArgsSchema, location='query')
-    @expenses.response(ExpenseListSchema, code=200)
+    @expenses.response(200, ExpenseListSchema)
     def get(self, arguments):
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
@@ -74,7 +74,7 @@ class ExpensesList(MethodView):
     @auth_required
     @developer_required
     @expenses.arguments(ExpenseCreateSchema, location='json')
-    @expenses.response(ExpenseSchema(only=(
+    @expenses.response(200, ExpenseSchema(only=(
         'type',
         'amount',
         'number',
@@ -87,7 +87,7 @@ class ExpensesList(MethodView):
         'id',
         'verified',
         'created_at'
-    )), code=200)
+    )))
     def post(self, data):
         liquid = Liquid.query.get(data['liquid_id'])
 
@@ -122,7 +122,7 @@ class ExpensesList(MethodView):
 
 @expenses.route('/<expense_id>')
 class ExpenseById(MethodView):
-    @expenses.response(ExpenseSchema(only=(
+    @expenses.response(200, ExpenseSchema(only=(
         'type',
         'amount',
         'number',
@@ -135,7 +135,7 @@ class ExpenseById(MethodView):
         'id',
         'verified',
         'created_at'
-    )), code=200)
+    )))
     def get(self, expense_id):
         expense = Expense.query.get_or_404(expense_id)
         if expense.deleted:
@@ -146,7 +146,7 @@ class ExpenseById(MethodView):
     @auth_required
     @developer_required
     @expenses.arguments(ExpenseUpdateSchema, location='json')
-    @expenses.response(ExpenseSchema(only=(
+    @expenses.response(200, ExpenseSchema(only=(
         'type',
         'amount',
         'number',
@@ -159,7 +159,7 @@ class ExpenseById(MethodView):
         'id',
         'verified',
         'created_at'
-    )), code=200)
+    )))
     def put(self, data, expense_id):
         expense = Expense.query.get_or_404(expense_id)
 

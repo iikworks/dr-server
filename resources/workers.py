@@ -13,7 +13,7 @@ workers = Blueprint('workers', 'workers', url_prefix='/workers')
 @workers.route('/')
 class Vehicles(MethodView):
     @workers.arguments(FiltersQueryArgsSchema, location='query')
-    @workers.response(WorkersListSchema, code=200)
+    @workers.response(200, WorkersListSchema)
     def get(self, arguments):
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
@@ -38,9 +38,9 @@ class Vehicles(MethodView):
     @auth_required
     @developer_required
     @workers.arguments(WorkersCreateSchema, location='json')
-    @workers.response(WorkerSchema(only=(
+    @workers.response(200, WorkerSchema(only=(
             'first_name', 'last_name', 'patronymic', 'show_full_name', 'used', 'id'
-    )), code=200)
+    )))
     def post(self, data):
         worker = Worker(user_id=g.user.id, **data)
         worker.save()
@@ -50,9 +50,9 @@ class Vehicles(MethodView):
 
 @workers.route('/<worker_id>')
 class VehiclesById(MethodView):
-    @workers.response(WorkerSchema(only=(
+    @workers.response(200, WorkerSchema(only=(
             'first_name', 'last_name', 'patronymic', 'show_full_name', 'used', 'id'
-    )), code=200)
+    )))
     def get(self, worker_id):
         worker = Worker.query.get_or_404(worker_id)
         if worker.deleted:
@@ -63,9 +63,9 @@ class VehiclesById(MethodView):
     @auth_required
     @developer_required
     @workers.arguments(WorkersUpdateSchema, location='json')
-    @workers.response(WorkerSchema(only=(
+    @workers.response(200, WorkerSchema(only=(
             'first_name', 'last_name', 'patronymic', 'show_full_name', 'used', 'id'
-    )), code=200)
+    )))
     def put(self, data, worker_id):
         worker = Worker.query.get_or_404(worker_id)
 

@@ -13,7 +13,7 @@ liquids = Blueprint('liquids', 'liquids', url_prefix='/liquids')
 @liquids.route('/')
 class Liquids(MethodView):
     @liquids.arguments(FiltersQueryArgsSchema, location='query')
-    @liquids.response(LiquidsListSchema, code=200)
+    @liquids.response(200, LiquidsListSchema)
     def get(self, arguments):
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
@@ -38,9 +38,9 @@ class Liquids(MethodView):
     @auth_required
     @developer_required
     @liquids.arguments(LiquidsCreateSchema, location='json')
-    @liquids.response(LiquidSchema(only=(
+    @liquids.response(200, LiquidSchema(only=(
         'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
-    )), code=200)
+    )))
     def post(self, data):
         liquid = Liquid(user_id=g.user.id, **data)
         liquid.save()
@@ -50,9 +50,9 @@ class Liquids(MethodView):
 
 @liquids.route('/<liquid_id>')
 class LiquidsById(MethodView):
-    @liquids.response(LiquidSchema(only=(
+    @liquids.response(200, LiquidSchema(only=(
             'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
-    )), code=200)
+    )))
     def get(self, liquid_id):
         liquid = Liquid.query.get_or_404(liquid_id)
         if liquid.deleted:
@@ -63,9 +63,9 @@ class LiquidsById(MethodView):
     @auth_required
     @developer_required
     @liquids.arguments(LiquidsUpdateSchema, location='json')
-    @liquids.response(LiquidSchema(only=(
+    @liquids.response(200, LiquidSchema(only=(
             'prefix', 'title', 'balance', 'unit', 'user', 'used', 'id'
-    )), code=200)
+    )))
     def put(self, data, liquid_id):
         liquid = Liquid.query.get_or_404(liquid_id)
 

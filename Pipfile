@@ -6,8 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-marshmallow = "==3.7.0"
-psycopg2-binary = "==2.8.5"
+marshmallow = "==3.11.1"
+psycopg2-binary = "==2.8.6"
 bcrypt = "==3.1.7"
 alembic = "==1.4.2"
 gunicorn = "==20.0.4"
@@ -20,4 +20,4 @@ flask-migrate = "*"
 sqlalchemy = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"

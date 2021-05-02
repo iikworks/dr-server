@@ -13,7 +13,7 @@ posts = Blueprint('posts', 'posts', url_prefix='/posts')
 @posts.route('/')
 class Posts(MethodView):
     @posts.arguments(FiltersQueryArgsSchema, location='query')
-    @posts.response(PostsListSchema, code=200)
+    @posts.response(200, PostsListSchema)
     def get(self, arguments):
         query = Post.query.filter_by(deleted=False)
         count = query.count()
@@ -28,9 +28,9 @@ class Posts(MethodView):
     @auth_required
     @developer_required
     @posts.arguments(PostsCreateSchema, location='json')
-    @posts.response(PostSchema(only=(
+    @posts.response(200, PostSchema(only=(
             'id', 'title', 'text', 'views', 'user', 'created_at'
-    )), code=200)
+    )))
     def post(self, data):
         post = Post(user_id=g.user.id, **data)
         post.save()
@@ -40,9 +40,9 @@ class Posts(MethodView):
 
 @posts.route('/<post_id>')
 class PostsById(MethodView):
-    @posts.response(PostSchema(only=(
+    @posts.response(200, PostSchema(only=(
             'id', 'title', 'text', 'views', 'user', 'created_at'
-    )), code=200)
+    )))
     def get(self, post_id):
         post = Post.query.get_or_404(post_id)
         if post.deleted:
@@ -53,9 +53,9 @@ class PostsById(MethodView):
     @auth_required
     @developer_required
     @posts.arguments(PostsUpdateSchema, location='json')
-    @posts.response(PostSchema(only=(
+    @posts.response(200, PostSchema(only=(
             'id', 'title', 'text', 'views', 'user', 'created_at'
-    )), code=200)
+    )))
     def put(self, data, post_id):
         post = Post.query.get_or_404(post_id)
 

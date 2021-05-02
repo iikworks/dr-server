@@ -18,7 +18,7 @@ auth = Blueprint('auth', 'auth', url_prefix='/auth')
 
 @auth.route('/me')
 class Me(MethodView):
-    @auth.response(UserSchema, code=200)
+    @auth.response(200, UserSchema)
     @auth_required
     def get(self):
         user_schema = UserSchema()
@@ -40,7 +40,7 @@ class Logout(MethodView):
 @auth.route('/login')
 class Login(MethodView):
     @auth.arguments(LoginQueryArgsSchema, location='json')
-    @auth.response(AuthSuccessSchema, code=200)
+    @auth.response(200, AuthSuccessSchema)
     def post(self, data):
         user = User.query.filter_by(email=data['email']).first()
 
@@ -65,7 +65,7 @@ class Login(MethodView):
 @auth.route('/signup')
 class SignUp(MethodView):
     @auth.arguments(SignUpQueryArgsSchema, location='json')
-    @auth.response(AuthSuccessSchema, code=201)
+    @auth.response(201, AuthSuccessSchema)
     def post(self, data):
         del data['password_repeat']
 

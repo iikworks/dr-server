@@ -14,7 +14,7 @@ invites = Blueprint('invites', 'invites', url_prefix='/invites')
 class Vehicles(MethodView):
     @auth_required
     @developer_required
-    @invites.response(InvitesListSchema, code=200)
+    @invites.response(200, InvitesListSchema)
     def get(self):
         query = Invite.query
 
@@ -26,9 +26,9 @@ class Vehicles(MethodView):
 
     @auth_required
     @developer_required
-    @invites.response(InviteSchema(only=(
+    @invites.response(200, InviteSchema(only=(
             'code', 'used', 'used_at', 'user', 'created_at', 'id'
-    )), code=200)
+    )))
     def post(self):
         invite = Invite()
         invite.save()
@@ -40,9 +40,9 @@ class Vehicles(MethodView):
 class VehiclesById(MethodView):
     @auth_required
     @developer_required
-    @invites.response(InviteSchema(only=(
+    @invites.response(200, InviteSchema(only=(
             'code', 'used', 'used_at', 'user', 'created_at', 'id'
-    )), code=200)
+    )))
     def get(self, invite_id):
         invite = Invite.query.get_or_404(invite_id)
 
@@ -51,9 +51,9 @@ class VehiclesById(MethodView):
     @auth_required
     @developer_required
     @invites.arguments(InviteUpdateSchema, location='json')
-    @invites.response(InviteSchema(only=(
+    @invites.response(200, InviteSchema(only=(
             'code', 'used', 'used_at', 'user', 'created_at', 'id'
-    )), code=200)
+    )))
     def put(self, data, invite_id):
         invite = Invite.query.get_or_404(invite_id)
 

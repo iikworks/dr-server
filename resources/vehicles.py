@@ -13,7 +13,7 @@ vehicles = Blueprint('vehicles', 'vehicles', url_prefix='/vehicles')
 @vehicles.route('/')
 class Vehicles(MethodView):
     @vehicles.arguments(FiltersQueryArgsSchema, location='query')
-    @vehicles.response(VehiclesListSchema, code=200)
+    @vehicles.response(200, VehiclesListSchema)
     def get(self, arguments):
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
@@ -38,7 +38,7 @@ class Vehicles(MethodView):
     @auth_required
     @developer_required
     @vehicles.arguments(VehiclesCreateSchema, location='json')
-    @vehicles.response(VehicleSchema(only=(
+    @vehicles.response(200, VehicleSchema(only=(
         'type',
         'brand',
         'model',
@@ -51,7 +51,7 @@ class Vehicles(MethodView):
         'used',
         'id',
         'type_display'
-    )), code=200)
+    )))
     def post(self, data):
         data['v_type'] = data['type']
         del data['type']
@@ -64,7 +64,7 @@ class Vehicles(MethodView):
 
 @vehicles.route('/<vehicle_id>')
 class VehiclesById(MethodView):
-    @vehicles.response(VehicleSchema(only=(
+    @vehicles.response(200, VehicleSchema(only=(
         'type',
         'brand',
         'model',
@@ -77,7 +77,7 @@ class VehiclesById(MethodView):
         'used',
         'id',
         'type_display'
-    )), code=200)
+    )))
     def get(self, vehicle_id):
         vehicle = Vehicle.query.get_or_404(vehicle_id)
         if vehicle.deleted:
@@ -88,7 +88,7 @@ class VehiclesById(MethodView):
     @auth_required
     @developer_required
     @vehicles.arguments(VehiclesUpdateSchema, location='json')
-    @vehicles.response(VehicleSchema(only=(
+    @vehicles.response(200, VehicleSchema(only=(
         'type',
         'brand',
         'model',
@@ -101,7 +101,7 @@ class VehiclesById(MethodView):
         'used',
         'id',
         'type_display'
-    )), code=200)
+    )))
     def put(self, data, vehicle_id):
         vehicle = Vehicle.query.get_or_404(vehicle_id)
 

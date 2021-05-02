@@ -22,7 +22,7 @@ homestats = Blueprint('homestats', 'homestats', url_prefix='/homestats')
 
 @homestats.route('/')
 class HomeStatsList(MethodView):
-    @homestats.response(HomeStatsListSchema, code=200)
+    @homestats.response(200, HomeStatsListSchema)
     def get(self):
         homestats_list = HomeStats.query.filter_by(deleted=False).order_by(asc('place')).order_by(asc('position')).all()
 
@@ -67,7 +67,7 @@ class HomeStatsList(MethodView):
     @auth_required
     @developer_required
     @homestats.arguments(HomeStatsCreateSchema, location='json')
-    @homestats.response(HomeStatsSchema(only=(
+    @homestats.response(200, HomeStatsSchema(only=(
         'type',
         'type_display',
         'title',
@@ -77,7 +77,7 @@ class HomeStatsList(MethodView):
         'id',
         'user',
         'created_at'
-    )), code=200)
+    )))
     def post(self, data):
         data['stat_type'] = data['type']
         del data['type']
@@ -90,7 +90,7 @@ class HomeStatsList(MethodView):
 
 @homestats.route('/<homestat_id>')
 class HomeStatsById(MethodView):
-    @homestats.response(HomeStatsSchema(only=(
+    @homestats.response(200, HomeStatsSchema(only=(
         'type',
         'type_display',
         'title',
@@ -100,7 +100,7 @@ class HomeStatsById(MethodView):
         'id',
         'user',
         'created_at'
-    )), code=200)
+    )))
     def get(self, homestat_id):
         homestat = HomeStats.query.get_or_404(homestat_id)
         if homestat.deleted:
@@ -111,7 +111,7 @@ class HomeStatsById(MethodView):
     @auth_required
     @developer_required
     @homestats.arguments(HomeStatsUpdateSchema, location='json')
-    @homestats.response(HomeStatsSchema(only=(
+    @homestats.response(200, HomeStatsSchema(only=(
         'type',
         'type_display',
         'title',
@@ -121,7 +121,7 @@ class HomeStatsById(MethodView):
         'id',
         'user',
         'created_at'
-    )), code=200)
+    )))
     def put(self, data, homestat_id):
         homestat = HomeStats.query.get_or_404(homestat_id)
 
@@ -179,7 +179,7 @@ class HomeStatsById(MethodView):
 @homestats.route('/using')
 class HomeStatsUsing(MethodView):
     @homestats.arguments(HomeStatsUsingFilters, location='query')
-    @homestats.response(HomeStatsUsingList, code=200)
+    @homestats.response(200, HomeStatsUsingList)
     def get(self, arguments):
         query = Using.query
 
