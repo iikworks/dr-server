@@ -93,8 +93,8 @@ class HomeStatsList(MethodView):
 class HomeStatsUnchecked(MethodView):
     @homestats.response(200, HomeStatsUnckeckedList())
     def get(self):
-        expenses = Expense.query.filter(Expense.verified != 2).order_by(desc('date'))
-        incoming = Incoming.query.filter(Incoming.verified != 2).order_by(desc('date'))
+        expenses = Expense.query.filter_by(deleted=False).filter(Expense.verified != 2).order_by(desc('date'))
+        incoming = Incoming.query.filter_by(deleted=False).filter(Incoming.verified != 2).order_by(desc('date'))
 
         return {
             'expenses': {
