@@ -47,6 +47,11 @@ class HomeStatsListSchema(Schema):
     )))
 
 
+class HomeStatsUnckeckedList(Schema):
+    expenses = fields.Nested(ExpenseListSchema(only=('expenses', 'count', 'amount')))
+    incoming = fields.Nested(IncomingListSchema(only=('incoming', 'count', 'amount')))
+
+
 class HomeStatsCreateSchema(Schema):
     type = fields.String(
         required=True,

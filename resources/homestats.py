@@ -10,7 +10,8 @@ from schemas.homestats import (
     HomeStatsUpdateSchema,
     HomeStatsListSchema,
     HomeStatsUsingList,
-    HomeStatsUsingFilters
+    HomeStatsUsingFilters,
+    HomeStatsUnckeckedList
 )
 from models.homestats import HomeStats
 from models.expense import Expense
@@ -86,6 +87,25 @@ class HomeStatsList(MethodView):
         homestat.save()
 
         return homestat
+
+
+@homestats.route('/unchecked')
+class HomeStatsUnchecked(MethodView):
+    @homestats.response(200, HomeStatsUnckeckedList())
+    def get(self):
+        expenses = Expense.query.filter(Expense.verified != 2).order_by(desc('date'))
+        incoming = Incoming.query.filter(Incoming.verified != 2).order_by(desc('date'))
+
+        return {
+            'expenses': {
+                'expenses': expenses.all(),
+                'count': expenses.count()
+            },
+            'incoming': {
+                'incoming': incoming.all(),
+                'count': incoming.count()
+            },
+        }
 
 
 @homestats.route('/<homestat_id>')
