@@ -44,6 +44,9 @@ class ExpensesList(MethodView):
 
         if 'worker_id' in arguments['data']:
             query = query.filter_by(worker_id=arguments['data']['worker_id'])
+        
+        if 'unverified' in arguments['data']:
+            query = query.filter_by(deleted=False).filter(Expense.verified != 2)
 
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])
@@ -56,6 +59,8 @@ class ExpensesList(MethodView):
 
             response['amount'] = amount
             response['liquid'] = Liquid.query.get(arguments['data']['liquid_id'])
+        
+        
 
         count = query.count()
 
@@ -65,7 +70,7 @@ class ExpensesList(MethodView):
         if arguments['per_page']['limit'] != 0:
             query = query.limit(arguments['per_page']['limit'])
             query = query.offset(arguments['per_page']['offset'])
-
+        
         response['expenses'] = query.all()
         response['count'] = count
 

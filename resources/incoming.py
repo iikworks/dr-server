@@ -35,6 +35,9 @@ class IncomingList(MethodView):
             query = query.filter(
                 and_(Incoming.date <= arguments['data']['e_date'] + timedelta(days=1), Incoming.date >= arguments['data']['s_date'])
             )
+        
+        if 'unverified' in arguments['data']:
+            query = query.filter_by(deleted=False).filter(Incoming.verified != 2)
 
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])

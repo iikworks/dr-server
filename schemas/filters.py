@@ -9,6 +9,7 @@ class FiltersQueryArgsSchema(Schema):
     order_type = fields.String(missing='asc')
     limit = fields.Number(missing=25)
     offset = fields.Number(missing=0)
+    unverified = fields.Number(required=False)
     date = fields.DateTime(required=False, format='%Y-%m-%d')
     s_date = fields.DateTime(required=False, format='%Y-%m-%d')
     e_date = fields.DateTime(required=False, format='%Y-%m-%d')
