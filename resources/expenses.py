@@ -27,6 +27,9 @@ class ExpensesList(MethodView):
 
         arguments['filters']['deleted'] = False
 
+        if 'archive' in arguments['data']:
+            arguments['filters']['deleted'] = True
+
         query = Expense.query.filter_by(**arguments['filters'])
 
         response = {}
@@ -46,7 +49,7 @@ class ExpensesList(MethodView):
             query = query.filter_by(worker_id=arguments['data']['worker_id'])
         
         if 'unverified' in arguments['data']:
-            query = query.filter_by(deleted=False).filter(Expense.verified != 2)
+            query = query.filter(Expense.verified != 2)
 
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])

@@ -24,6 +24,9 @@ class IncomingList(MethodView):
 
         arguments['filters']['deleted'] = False
 
+        if 'archive' in arguments['data']:
+            arguments['filters']['deleted'] = True
+
         query = Incoming.query.filter_by(**arguments['filters'])
 
         response = {}
@@ -37,7 +40,7 @@ class IncomingList(MethodView):
             )
         
         if 'unverified' in arguments['data']:
-            query = query.filter_by(deleted=False).filter(Incoming.verified != 2)
+            query = query.filter(Incoming.verified != 2)
 
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])

@@ -10,6 +10,7 @@ class FiltersQueryArgsSchema(Schema):
     limit = fields.Number(missing=25)
     offset = fields.Number(missing=0)
     unverified = fields.Boolean(required=False)
+    archive = fields.Boolean(required=False)
     date = fields.DateTime(required=False, format='%Y-%m-%d')
     s_date = fields.DateTime(required=False, format='%Y-%m-%d')
     e_date = fields.DateTime(required=False, format='%Y-%m-%d')
