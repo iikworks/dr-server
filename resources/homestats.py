@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 from flask import abort, jsonify, g
 from flask.views import MethodView
 from flask_smorest import Blueprint
@@ -60,6 +60,20 @@ class HomeStatsList(MethodView):
                     'count': query.count(),
                     'amount': amount,
                 }
+            if homestat.place == 3:
+                query = Expense.query.filter_by(liquid_id=homestat.liquid.id, deleted=False)\
+                    .filter(cast(Expense.date, Date) >= (date.today() - timedelta(days=7)))\
+                    .order_by(desc('date'))
+                
+                average_count = query.count()
+
+                average_amounts = query.with_entities(Expense.amount)
+                average_amount = 0
+
+                for expenseAmount in average_amounts:
+                    average_amount = average_amount + expenseAmount.amount
+                
+                homestat.average_expense = average_amount / average_count
 
         return {
             'homestats': homestats_list

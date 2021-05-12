@@ -20,6 +20,7 @@ class HomeStatsSchema(Schema):
     incoming = fields.Nested(IncomingListSchema(only=('incoming', 'count', 'amount')))
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
     liquid = fields.Nested(LiquidSchema(only=('prefix', 'title', 'balance', 'unit', 'user', 'used', 'id')))
+    average_expense = fields.Number(required=False)
     created_at = fields.String()
 
     def display_type(self, obj):
@@ -43,7 +44,8 @@ class HomeStatsListSchema(Schema):
         'liquid',
         'id',
         'user',
-        'created_at'
+        'created_at',
+        'average_expense'
     )))
 
 
