@@ -62,10 +62,9 @@ class HomeStatsList(MethodView):
                 }
             if homestat.place == 3:
                 query = Expense.query.filter_by(liquid_id=homestat.liquid.id, deleted=False)\
-                    .filter(cast(Expense.date, Date) >= (date.today() - timedelta(days=7)))\
+                    .filter(cast(Expense.date, Date) >= (date.today() - timedelta(days=6)))\
                     .order_by(desc('date'))
                 
-                average_count = query.count()
 
                 average_amounts = query.with_entities(Expense.amount)
                 average_amount = 0
@@ -73,7 +72,7 @@ class HomeStatsList(MethodView):
                 for expenseAmount in average_amounts:
                     average_amount = average_amount + expenseAmount.amount
                 
-                homestat.average_expense = average_amount / average_count
+                homestat.average_expense = average_amount / 7
 
         return {
             'homestats': homestats_list
