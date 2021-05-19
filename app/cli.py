@@ -3,12 +3,15 @@ from models.user import User
 
 
 def register_commands(app):
+    # Настройка команды для добавления аккаунта разработчика
     @app.cli.command('create-dev-user')
     def create_dev_user():
+        # Считывание данных для нового аккаунта
         email = click.prompt('Введите адрес электронной почты', type=str)
         first_name = click.prompt('Введите имя', type=str)
         last_name = click.prompt('Введите фамилию', type=str)
 
+        # Считывание и проверка пароля
         password = ''
         while(password == ''):
             temp_password = click.prompt('Введите пароль', type=str, hide_input=True)
@@ -19,6 +22,7 @@ def register_commands(app):
             else:
                 print('Неверный пароль. Повторите ещё раз.')
         
+        # Компановка всех введенных данных
         data = {
             'email': email,
             'first_name': first_name,
@@ -27,6 +31,7 @@ def register_commands(app):
             'employee': 999
         }
 
+        # Создание аккаунта из предоставленных данных
         user = User(**data)
         user.save()
 

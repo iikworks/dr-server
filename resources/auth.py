@@ -13,11 +13,13 @@ from schemas.user import (
     AuthSuccessSchema
 )
 
+# Создание ресурса
 auth = Blueprint('auth', 'auth', url_prefix='/auth')
 
 
 @auth.route('/me')
 class Me(MethodView):
+    # Ресурс для показа информации авторизированного пользователя
     @auth.response(200, UserSchema)
     @auth_required
     def get(self):
@@ -28,6 +30,7 @@ class Me(MethodView):
 
 @auth.route('/logout')
 class Logout(MethodView):
+    # Ресурс для выхода из текущего аккаунта (удаления активного токена)
     @auth_required
     def get(self):
         g.token.delete()
@@ -42,14 +45,21 @@ class Login(MethodView):
     @auth.arguments(LoginQueryArgsSchema, location='json')
     @auth.response(200, AuthSuccessSchema)
     def post(self, data):
+        # Ресурс для входа в аккаунт и создания нового токена
+        # Необходимые данные: email, password
+        # Возвращает: user_id, token, token_expires_in
+
+        # Поиск пользователя по email в базе данных
         user = User.query.filter_by(email=data['email']).first()
 
         if user is None:
             return jsonify({'error': 'wrong email or password'}), 401
 
+        # Проверка правильности ввода пароля
         if not user.check_password(data['password']):
             return jsonify({'error': 'wrong email or password'}), 401
 
+        # Создание токена
         token = Token(user.id)
         token.save()
 

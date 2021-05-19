@@ -22,6 +22,11 @@ class ExpensesList(MethodView):
     @expenses.arguments(FiltersQueryArgsSchema, location='query')
     @expenses.response(200, ExpenseListSchema)
     def get(self, arguments):
+        # Ресурс для показа всех расходов
+        # Принимает (query): order_column, order_type, limit, offset, unverified,
+        ##  archive, date, s_date, e_date, liquid_id, vehicle_id, worker_id
+        # Возвращает: expenses, count, amount, liquid
+
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
 

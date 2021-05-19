@@ -11,6 +11,8 @@ from .posts import posts
 
 
 def load_resources(app):
+    # Регистрация всех ресурсов (путей)
+
     api = Api(app)
 
     api.register_blueprint(auth)
