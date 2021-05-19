@@ -27,37 +27,49 @@ class ExpensesList(MethodView):
         ##  archive, date, s_date, e_date, liquid_id, vehicle_id, worker_id
         # Возвращает: expenses, count, amount, liquid
 
+        # Фильтры для упорядовачиния результата
         order_column = arguments['order']['column']
         order_type = arguments['order']['type']
 
+        # Фильтр для скрытия удаленных записей
         arguments['filters']['deleted'] = False
 
+        # Устанвливается фильтр delete=true, если необходимо показать архив
         if 'archive' in arguments['data']:
             arguments['filters']['deleted'] = True
 
+        # Применение фильтров
         query = Expense.query.filter_by(**arguments['filters'])
 
         response = {}
 
+        # Фильтр по определенной дате
         if 'date' in arguments['data']:
             query = query.filter(cast(Expense.date, Date) == arguments['data']['date'])
 
+        # Фильтр по периоду даты
         if 's_date' in arguments['data'] and 'e_date' in arguments['data']:
             query = query.filter(
                 and_(Expense.date <= arguments['data']['e_date'] + timedelta(days=1), Expense.date >= arguments['data']['s_date'])
             )
 
+        # Фильтр по технике
         if 'vehicle_id' in arguments['data']:
             query = query.filter_by(vehicle_id=arguments['data']['vehicle_id'])
 
+        # Фильтр по работнику
         if 'worker_id' in arguments['data']:
             query = query.filter_by(worker_id=arguments['data']['worker_id'])
-        
+
+        # Фильтр по степени проверки     
         if 'unverified' in arguments['data']:
             query = query.filter(Expense.verified != 2)
 
+        # Фильтр по ГСМ
         if 'liquid_id' in arguments['data']:
             query = query.filter_by(liquid_id=arguments['data']['liquid_id'])
+
+            # Подсчет общего количества расхода жидкости по единице измерения
 
             amounts = query.with_entities(Expense.amount)
             amount = 0
@@ -69,16 +81,20 @@ class ExpensesList(MethodView):
             response['liquid'] = Liquid.query.get(arguments['data']['liquid_id'])
         
         
-
+        # Подсчет количества расходов
         count = query.count()
 
+        # Упорядочение расходов по колонке
         query = query.order_by(
             desc(order_column) if order_type == 'desc' else asc(order_column)
         )
+        
+        # Лимит и оффсет выдачи для пагинации
         if arguments['per_page']['limit'] != 0:
             query = query.limit(arguments['per_page']['limit'])
             query = query.offset(arguments['per_page']['offset'])
         
+        # Возврат результата
         response['expenses'] = query.all()
         response['count'] = count
 
