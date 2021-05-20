@@ -43,6 +43,10 @@ class HomeStatsTestCase(TestCase):
         self.assertEqual(homestat.position, data['homestats'][0]['position'])
         self.assertEqual(homestat.type, data['homestats'][0]['type'])
 
+    def test_homestats_unchecked_list(self):
+        response = self.app.get('/homestats/unchecked')
+        self.assertEqual(response.status_code, 200)
+
     def test_homestats_create_page(self):
         user = User(**{
             'email': 'homestatscreate@mail.ru',

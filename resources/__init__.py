@@ -8,6 +8,7 @@ from .expenses import expenses
 from .homestats import homestats
 from .invites import invites
 from .posts import posts
+from .cardnumbers import cardnumbers
 
 
 def load_resources(app):
@@ -24,5 +25,6 @@ def load_resources(app):
     api.register_blueprint(homestats)
     api.register_blueprint(invites)
     api.register_blueprint(posts)
+    api.register_blueprint(cardnumbers)
 
     return api
