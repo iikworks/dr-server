@@ -239,10 +239,19 @@ class ExpenseById(MethodView):
             worker.used = worker.used + 1
             worker.save()
 
+            
+
         if 'vehicle_id' in data:
             vehicle = Vehicle.query.get(data['vehicle_id'])
             vehicle.used = vehicle.used + 1
             vehicle.save()
+        
+        using = Using.query.filter_by(worker_id=expense.worker_id, vehicle_id=expense.vehicle_id).first()
+        if not using:
+            using = Using(worker_id=expense.worker_id, vehicle_id=expense.vehicle_id)
+        
+        using.used = using.used + 1
+        using.save()
 
         for key, value in data.items():
             setattr(expense, key, value)
