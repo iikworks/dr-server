@@ -9,6 +9,7 @@ from tests.homestats import HomeStatsTestCase
 from tests.invites import InvitesTestCase
 from tests.posts import PostsTestCase
 from tests.cardnumbers import CardNumbersTestCase
+from tests.users import UsersTestCase
 
 if __name__ == '__main__':
     unittest.main()

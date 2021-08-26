@@ -47,6 +47,9 @@ class PostsById(MethodView):
         post = Post.query.get_or_404(post_id)
         if post.deleted:
             return abort(404)
+        
+        post.views = post.views + 1
+        post.save()
 
         return post
 

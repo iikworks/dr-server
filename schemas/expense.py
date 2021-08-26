@@ -14,6 +14,7 @@ class ExpenseSchema(Schema):
     amount = fields.Number()
     number = fields.Integer()
     purpose = fields.String()
+    purpose_who = fields.String()
     date = fields.String()
     verified = fields.Integer()
     user = fields.Nested(UserSchema(only=('id', 'first_name', 'last_name', 'employee')))
@@ -50,6 +51,7 @@ class ExpenseListSchema(Schema):
         'amount',
         'number',
         'purpose',
+        'purpose_who',
         'date',
         'user',
         'liquid',
@@ -80,11 +82,15 @@ class ExpenseCreateSchema(Schema):
         required=False,
         validate=[validate.Length(max=200, min=1)]
     )
+    purpose_who = fields.String(
+        required=False,
+        validate=[validate.Length(max=200, min=1)]
+    )
 
     date = fields.DateTime(format='%Y-%m-%dT%H:%M', required=False)
     liquid_id = fields.Integer(required=True)
     vehicle_id = fields.Integer(required=False)
-    worker_id = fields.Integer(required=True)
+    worker_id = fields.Integer(required=False)
 
     @validates_schema
     def final_validations(self, data, **kwargs):
@@ -95,9 +101,10 @@ class ExpenseCreateSchema(Schema):
         if data['amount'] > liquid.balance:
             raise ValidationError('Недостаточно топлива', 'liquid_id')
 
-        worker = Worker.query.get(data['worker_id'])
-        if not worker:
-            raise ValidationError('Работник не найден', 'worker_id')
+        if 'worker_id' in data:
+            worker = Worker.query.get(data['worker_id'])
+            if not worker:
+                raise ValidationError('Работник не найден', 'worker_id')
 
         if data['type'] == 'lc':
             if 'vehicle_id' not in data:
@@ -109,6 +116,9 @@ class ExpenseCreateSchema(Schema):
         elif data['type'] == 'ic':
             if 'purpose' not in data:
                 raise ValidationError('Вы не указали назначение', 'purpose')
+            
+            if 'purpose_who' not in data:
+                raise ValidationError('Вы не указали адресата', 'purpose')
 
 
 class ExpenseUpdateSchema(Schema):
@@ -122,6 +132,10 @@ class ExpenseUpdateSchema(Schema):
     )
     number = fields.Integer(required=False)
     purpose = fields.String(
+        required=False,
+        validate=[validate.Length(max=200, min=1)]
+    )
+    purpose_who = fields.String(
         required=False,
         validate=[validate.Length(max=200, min=1)]
     )

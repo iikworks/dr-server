@@ -17,6 +17,17 @@ class UserSchema(Schema):
     created_at = fields.String()
 
 
+class UsersListSchema(Schema):
+    users = fields.Nested(UserSchema(many=True, only=(
+        'first_name',
+        'last_name',
+        'employee',
+        'created_at',
+        'id'
+    )))
+    count = fields.Integer()
+
+
 class LoginQueryArgsSchema(Schema):
     email = fields.Email(
         required=True,

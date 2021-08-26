@@ -145,16 +145,6 @@ class ExpensesTestCase(TestCase):
                     'number': expense_number,
                 },
                 'status_code': 422
-            }, 'missing_worker_id': {
-                'data': {
-                    'liquid_id': expense_liquid_id,
-                    'type': expense_type,
-                    'amount': expense_amount,
-                    'vehicle_id': expense_vehicle_id,
-                    'date': expense_date,
-                    'number': expense_number,
-                },
-                'status_code': 422
             }, 'missing_vehicle_id': {
                 'data': {
                     'liquid_id': expense_liquid_id,

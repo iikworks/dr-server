@@ -108,6 +108,7 @@ class ExpensesList(MethodView):
         'amount',
         'number',
         'purpose',
+        'purpose_who',
         'date',
         'user',
         'liquid',
@@ -130,15 +131,17 @@ class ExpensesList(MethodView):
         liquid.used = liquid.used + 1
         liquid.save()
 
-        worker = Worker.query.get(data['worker_id'])
-        worker.used = worker.used + 1
-        worker.save()
+        if 'worker_id' in data:
+            worker = Worker.query.get(data['worker_id'])
+            worker.used = worker.used + 1
+            worker.save()
 
         if 'vehicle_id' in data:
             vehicle = Vehicle.query.get(data['vehicle_id'])
             vehicle.used = vehicle.used + 1
             vehicle.save()
 
+        if 'vehicle_id' in data and 'worker_id' in data:
             using = Using.query.filter_by(worker_id=worker.id, vehicle_id=vehicle.id).first()
             if not using:
                 using = Using(worker_id=worker.id, vehicle_id=vehicle.id)
@@ -156,6 +159,7 @@ class ExpenseById(MethodView):
         'amount',
         'number',
         'purpose',
+        'purpose_who',
         'date',
         'user',
         'liquid',
@@ -180,6 +184,7 @@ class ExpenseById(MethodView):
         'amount',
         'number',
         'purpose',
+        'purpose_who',
         'date',
         'user',
         'liquid',

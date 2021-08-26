@@ -22,6 +22,7 @@ class Expense(db.Model):
     type = db.Column(db.String(50), nullable=False)
     amount = db.Column(db.Numeric(precision=10, asdecimal=False, scale=2), default=0.00)
     number = db.Column(db.Integer, default=0)
+    purpose_who = db.Column(db.String(200), nullable=True)
     purpose = db.Column(db.String(200), nullable=True)
     date = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
     deleted = db.Column(db.Boolean, default=False)
@@ -40,12 +41,13 @@ class Expense(db.Model):
         user_id,
         liquid_id,
         expense_type,
-        worker_id,
         amount,
         date=datetime.datetime.now(),
         number=0,
+        worker_id=None,
         vehicle_id=None,
         purpose=None,
+        purpose_who=None,
     ):
         self.user_id = user_id
         self.liquid_id = liquid_id
@@ -56,6 +58,7 @@ class Expense(db.Model):
         self.number = number
         self.vehicle_id = vehicle_id
         self.purpose = purpose
+        self.purpose_who = purpose_who
 
     def save(self):
         db.session.add(self)
